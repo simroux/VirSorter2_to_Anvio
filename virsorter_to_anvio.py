@@ -64,7 +64,7 @@ if not(os.path.exists(arg_dict['global_file'])):
 if not(os.path.exists(arg_dict['boundary_file'])):
 	print("\n*** problenm -> {} does not exit, and we need it, sorry.".format(arg_dict['boundary_file']))
 	sys.exit()
-if not(os.path.exists(arg_dict['global_file'])):
+if not(os.path.exists(arg_dict['affi_file'])):
 	print("\n*** problenm -> {} does not exit, and we need it, sorry. Did you run VirSorter2 with the option '--prep-for-dramv' ? If not, you should, because we need this file.".format(arg_dict['affi_file']))
 	sys.exit()
 
@@ -88,7 +88,8 @@ with open(arg_dict['global_file'], newline='') as csvfile:
 		if row[0].startswith("#"): continue
 		if row[0] == "": continue
 		if row[0] == "seqname":
-			for i in range(2, 9):
+			for i in range(2, len(row)):
+				print(row[i])
 				if row[i] == "max_score":
 					col_score = i
 			continue
@@ -97,6 +98,7 @@ with open(arg_dict['global_file'], newline='') as csvfile:
 			sys.exit()
 		vir_tab = row[0].split("||")
 		contig = vir_tab[0]
+		print(vir_tab)
 		if vir_tab[1]=="full" or vir_tab[1]=="lt2gene" or not(arg_dict['exclude_prophages']):
 			## We are interested by this prediction
 			if contig not in info_contigs:
