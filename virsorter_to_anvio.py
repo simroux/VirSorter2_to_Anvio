@@ -112,7 +112,7 @@ with open(arg_dict['global_file'], newline='') as csvfile:
 			if vir_tab[1]=="full" or vir_tab[1]=="lt2gene":
 				## Full predictionsif contig not in info_contigs:
 				info_contigs[contig][row[0]]["type"] = "full"
-				if vir_tab[1]=="lt2gene":
+				if vir_tab[1]=="lt2gene" or (len(vir_tab)>=3 & vir_tab[2]=="lt2gene"):
 					info_contigs[contig][row[0]]["nb_genes"] = row[col_score+3] ### the "lt2gene" are not listed in the "boundary" files which is where the total # of genes is indicated. Instead, we use the total # of hallmark genes as total number of genes for these short contigs (doesn't really matter, this nb_genes is 1 or 2 anyway)
 			elif not(arg_dict['exclude_prophages']):
 				info_contigs[contig][row[0]]["type"] = "prophage"
