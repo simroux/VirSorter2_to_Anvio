@@ -239,7 +239,7 @@ while line != "":
 			virus_name = virus.replace("||","__")
 			nb_hallmark = info_contigs[split_parent][virus]['nb_hallmark']
 			if ('nb_genes' not in  info_contigs[split_parent][virus]):
-				print("{} - {} doe not have a n_genes ?".format(split_parent, virus))
+				print("{} - {} doe not have a nb_genes ?".format(split_parent, virus))
 			nb_genes = info_contigs[split_parent][virus]['nb_genes']
 			score = info_contigs[split_parent][virus]['score']
 			type = "Full"
@@ -253,6 +253,8 @@ while line != "":
 			## Now we have prophage prediction(s), so we need to go through these
 			for prophage in info_contigs[split_parent]:
 				nb_hallmark = info_contigs[split_parent][prophage]['nb_hallmark']
+				if ('nb_genes' not in  info_contigs[split_parent][prophage]):
+					print("{} - {} doe not have a nb_genes ?".format(split_parent, prophage))
 				nb_genes = info_contigs[split_parent][prophage]['nb_genes']
 				score = info_contigs[split_parent][prophage]['score']
 				virus_length = info_contigs[split_parent][prophage]['length']
