@@ -18,6 +18,13 @@ def load_hallmark_functions(db_dir,hash):
 				### Note - MAY HAVE TO CLEAN UP row[0] (which has faa)
 				hash[row[0]]=row[1]
 
+### Another useful function for cases where VS2 was run on sequences that were already VS2 predictions, or other cases where the sequence name would include "||" prior to VS2
+def clean_id(full):
+	tab = full.split("||")
+	final = ["",""]
+	final[0] = "||".join(tab[:-1])
+	final[1] = tab[-1]
+	return final
 
 """
 Parse viral contig prediction results from VirSorter and generates three files usable by Anvi'o:
@@ -97,6 +104,8 @@ with open(arg_dict['global_file'], newline='') as csvfile:
 			print("We had some problem reading the header of the VirSorter2 score file, sorry ... ")
 			sys.exit()
 		vir_tab = row[0].split("||")
+		if (len(vir_tab)>2):
+			vir_tab = clean_id(row[0])
 		contig = vir_tab[0]
 		print(vir_tab)
 		if vir_tab[1]=="full" or vir_tab[1]=="lt2gene" or not(arg_dict['exclude_prophages']):
@@ -112,7 +121,7 @@ with open(arg_dict['global_file'], newline='') as csvfile:
 			if vir_tab[1]=="full" or vir_tab[1]=="lt2gene":
 				## Full predictionsif contig not in info_contigs:
 				info_contigs[contig][row[0]]["type"] = "full"
-				if vir_tab[1]=="lt2gene" or (len(vir_tab)>=3 & vir_tab[2]=="lt2gene"):
+				if vir_tab[1]=="lt2gene":
 					info_contigs[contig][row[0]]["nb_genes"] = row[col_score+3] ### the "lt2gene" are not listed in the "boundary" files which is where the total # of genes is indicated. Instead, we use the total # of hallmark genes as total number of genes for these short contigs (doesn't really matter, this nb_genes is 1 or 2 anyway)
 			elif not(arg_dict['exclude_prophages']):
 				info_contigs[contig][row[0]]["type"] = "prophage"
@@ -125,6 +134,8 @@ with open(arg_dict['boundary_file'], newline='') as csvfile:
 		if row[0] == "seqname": continue
 		virus = row[28]
 		virtab = virus.split("||")
+		if (len(virtab)>2):
+			virtab = clean_id(virus)
 		contig = virtab[0]
 		if contig not in info_contigs: continue ## We did not select this contig
 		if virus not in info_contigs[contig]: continue ## We did not select this prediction
@@ -190,7 +201,6 @@ with open(arg_dict['affi_file'], newline='') as csvfile:
 				hallmark_dict[c_virus][gene_id]['cat'] = cat
 				hallmark_dict[c_virus][gene_id]['score'] = score
 				hallmark_dict[c_virus][gene_id]['pfam_score'] = pfam_score
-
 
 #PART THREE
 #This writes all phages and prophages, to additional-info and collections files.
